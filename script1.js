@@ -128,3 +128,4 @@ document.getElementById('previous').addEventListener('click', () => {
 
 //h.w?
 //to add functionality of pause in songs list, to make song pause by space button , try to make it respossive (by using media query)
+//song khatam hone ke baad next song apne aap play ho jaaye
