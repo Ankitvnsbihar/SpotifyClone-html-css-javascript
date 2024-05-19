@@ -1,31 +1,50 @@
+document.addEventListener('DOMContentLoaded', () => {
 console.log("Welcome to Spotify");
 //Initialize the variable
 let songIndex = 0;
-let audioElement = new Audio('tujhme.mp3 ');
+let audioElement = new Audio('Omahi.mp3 ');
 let masterPlay = document.getElementById('masterPlay');
 let myProgressBar =  document.getElementById('myProgressBar');
 let gif =  document.getElementById('gif');
-let songItems  = Array.from(document.getElementsByClassName('songItem'));
-
+let songItems = Array.from(document.getElementsByClassName('songItem'));
 let songs = [
     {songName: "Tujhme rab dikhta hai", filePath: "tujhme.mp3" , coverPath: "songbanner.jpg"},
-    {songName: "O mahi", filePath: "O mahi.mp3" , coverPath: "Omahi.jpg"},
+    {songName: "O mahi", filePath: "Omahi.mp3" , coverPath: "Omahi.jpg"},
     {songName: "Lollipop lagelu", filePath: "Lollipop.mp3" , coverPath: "Lollipop.jpg"},
     {songName: "Tum Se", filePath: "TumSe.mp3" , coverPath: "TumSe.jpg"},
     {songName: "Chal tere ishq me ", filePath: "chalTere.mp3" , coverPath: "chalTere.jpg"},
    
 ]
+/*
 songItems.forEach((element, i) => {
-    console.log(element, i);
+    //console.log(element, i);
 element.getElementsByTagName('img')[0].src= songs[i].coverPath;
 element.getElementsByClassName('songName')[0].innerText = songs[i].songName;
 
 
 })
+*/
+songItems.forEach((element, i) => { 
+    
+    let imgElement = element.getElementsByTagName('img')[0];    
+    if(!imgElement){        
+        console.error(`img element not found for songItem ${i}`, element);     
+    }
+    let songNameElement = element.getElementsByClassName('songName')[0];
+    if(!songNameElement){
+        console.error(`songName element not found for songItem ${i}`, element);
+    }
+    imgElement.src = songs[i].coverPath;
+    songNameElement.innerText = songs[i].songName;
+}
+)   
+
+
 
 
 
 //audioElement.play();
+
 //Handle play/pause click
 masterPlay.addEventListener('click', () =>{
      if(audioElement.paused || audioElement.currentTime <= 0){
@@ -52,3 +71,5 @@ audioElement.addEventListener('timeupdate', ()=> {
 myProgressBar.addEventListener('change', () =>{
     audioElement.currentTime = myProgressBar.value * audioElement.duration/100;
 })
+
+});
