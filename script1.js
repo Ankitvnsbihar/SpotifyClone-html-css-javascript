@@ -1,4 +1,3 @@
-document.addEventListener("DOMContentLoaded", (event) => {
     console.log("Welcome to Spotify");
 
     // Initialize the variable
@@ -20,28 +19,28 @@ document.addEventListener("DOMContentLoaded", (event) => {
 
     songItems.forEach((element, i) => {
         console.log(`Processing songItem ${i}`, element);
+        /* wrong way -please do not do it directly , first load it into variable then execute it 
+        element.getElementsByTagName('img')[0].src = song[i].coverPath;
+        */
+       //below is the corrected way that is first load it into variable then excute/use it further
+       
 
         // Fetching img element
         let imgElement = element.getElementsByTagName('img')[0];
-        if (!imgElement) {
-            console.error(`img element not found for songItem ${i}`, element);
-            return; // Exit the current iteration
-        }
+       
 
         // Fetching songName element
         let songNameElement = element.getElementsByClassName('songName')[0];
-        if (!songNameElement) {
-            console.error(`songName element not found for songItem ${i}`, element);
-            return; // Exit the current iteration
-        }
+        
 
         // Setting src and innerText
-        imgElement.src = songs[i].coverPath;
-        songNameElement.innerText = songs[i].songName;
+          imgElement.src = songs[i].coverPath;
+          songNameElement.innerText = songs[i].songName;
     });
 
-    masterPlay.addEventListener('click', () => {
-        if (audioElement.paused || audioElement.currentTime <= 0) {
+
+    const togglePlayPause = () => {
+        if (audioElement.paused) {
             audioElement.play();
             masterPlay.classList.remove('fa-circle-play');
             masterPlay.classList.add('fa-pause-circle');
@@ -52,8 +51,18 @@ document.addEventListener("DOMContentLoaded", (event) => {
             masterPlay.classList.add('fa-circle-play');
             gif.style.opacity = 0;
         }
-    });
+    };
+   //making the song play by simple click
+    masterPlay.addEventListener('click', togglePlayPause);
+    //making the song play by space button
+    document.addEventListener('keydown', (event) => {
+        if(event.code === 'Space'){
+            togglePlayPause();
+        }
+    })
+    
 
+  
     audioElement.addEventListener('timeupdate', () => {
         // Update progress bar
         let progress = parseInt((audioElement.currentTime / audioElement.duration) * 100);
@@ -70,28 +79,44 @@ document.addEventListener("DOMContentLoaded", (event) => {
             
         })
     }
-
+   
+  
     Array.from(document.getElementsByClassName('songItemPlay')).forEach((element) => {
         element.addEventListener('click', (e) => {
-            
-            console.log(e.target);
-            makeAllPlays();
-            songIndex = parseInt(e.target.id);
-            gif.style.opacity =1;
-            e.target.classList.remove('fa-circle-play');
-            e.target.classList.add('fa-pause-circle');
-            
-           // audioElement.src = `${index +1}.mp3`;
-            audioElement.src = songs[songIndex].filePath;
-            masterSongName.innerText = songs[songIndex].songName;
-
-            audioElement.currentTime = 0;
-            audioElement.play();
-            masterPlay.classList.remove('fa-circle-play');
-            masterPlay.classList.add('fa-pause-circle');
+            if (audioElement.paused) {
+                // Only change the source if the song index is different
+                let newSongIndex = parseInt(e.target.id);
+                if (songIndex !== newSongIndex) {
+                    songIndex = newSongIndex;
+                    audioElement.src = songs[songIndex].filePath;
+                    masterSongName.innerText = songs[songIndex].songName;
+                }
+                
+                makeAllPlays();
+                gif.style.opacity = 1;
+                e.target.classList.remove('fa-circle-play');
+                e.target.classList.add('fa-pause-circle');
+    
+                audioElement.play();
+                masterPlay.classList.remove('fa-circle-play');
+                masterPlay.classList.add('fa-pause-circle');
+            } else {
+                audioElement.pause();
+                masterPlay.classList.remove('fa-pause-circle');
+                masterPlay.classList.add('fa-circle-play');
+                e.target.classList.remove('fa-pause-circle');
+                e.target.classList.add('fa-circle-play');
+                gif.style.opacity = 0;
+            }
         });
     });
-    document.getElementById('next').addEventListener('click', () => {
+
+ 
+
+
+
+
+    document.getElementById('next').addEventListener('click' , () => {
         if(songIndex >4){
             songIndex = 0;
         }
@@ -123,9 +148,13 @@ document.getElementById('previous').addEventListener('click', () => {
 
 
 
-});
 
 
-//h.w?
-//to add functionality of pause in songs list, to make song pause by space button , try to make it respossive (by using media query)
-//song khatam hone ke baad next song apne aap play ho jaaye
+
+
+
+
+
+
+
+
